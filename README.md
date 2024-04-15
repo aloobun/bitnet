@@ -1,8 +1,8 @@
 # to do:
 
-- [ ] LayerNorm
+- [x] LayerNorm
 
-- [ ] Absmax Quatization
+- [x] Absmax Quatization
 
 - [ ] 1 bit weights
 
