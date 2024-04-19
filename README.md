@@ -4,7 +4,7 @@
 
 - [x] Absmax Quatization
 
-- [ ] 1 bit weights
+- [x] 1 bit weights
 
 - [ ] Tensor product
 
