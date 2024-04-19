@@ -60,6 +60,7 @@ class BitLinear(nn.Linear):
         w_q, beta = self.quantize_weights()
 
         # tesnor product (input: x_q,gamma, output: x_matmul)
+        x_matmul = torch.nn.functional.linear(x_q, w_q, self.bias)
 
         # dequantization (input: x_matmul,beta,gamma, output: output)
 
