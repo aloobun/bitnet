@@ -45,8 +45,11 @@ class BitLinear(nn.Linear):
 
     def quantize_weights(self):
         alpha = self.weight.mean()
-        weight_binarized = self.custom_sign(self.weight - alpha)
+        weight_centered = self.weight - alpha
+        weight_binarized = self.custom_sign(weight_centered)
         beta = self.weight.abs().mean()
+        weight_scaled = weight_centered / (weight_centered.abs().max() + self.epsilon) #weight_centered is divided by weight_centered.abs().max() so that the scale is approximately the same before and after bypass
+        weight_binarized = (weight_binarized - weight_scaled).detach() + weight_scaled 
         return weight_binarized, beta
         
     def forward(self, x):
