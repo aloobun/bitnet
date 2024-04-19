@@ -1,5 +1,6 @@
 import torch
 from torch import nn
+from typing import Tuple
 
 class BitRMSNorm(nn.Module):
     def __init__(self, hidden_size, eps=1e-6):
