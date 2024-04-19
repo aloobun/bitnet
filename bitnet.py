@@ -28,7 +28,7 @@ class BitLinear(nn.Linear):
         self.flg_before_linear = flg_before_linear
         self.epsilon = 1e-6
 
-    def absmax_quantize(self, x: torch.Tensor, Qb: int, epsilon: float) -> Tuple[torch.Tensor, float]:
+    def absmax_quantize(self, x):
         epsilon = 1e-6
         if self.flg_before_linear:
             gamma = torch.abs(x).max().clamp(min=epsilon)
@@ -46,7 +46,7 @@ class BitLinear(nn.Linear):
     def custom_sign(self, x):
         return (x > 0).to(torch.int8) * 2 - 1
 
-    def quantize_weights(self, weight: torch.Tensor, epsilon: float) -> Tuple[torch.Tensor, float]:
+    def quantize_weights(self):
         alpha = self.weight.mean()
         weight_centered = self.weight - alpha
         weight_binarized = self.custom_sign(weight_centered)
