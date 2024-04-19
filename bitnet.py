@@ -20,8 +20,11 @@ class BitRMSNorm(nn.Module):
 
 class BitLinear(nn.Linear):
     def __init__(self, in_features, out_features, bias=False):
-        super(BitLinear, self).__init__(in_features, out_features, bias, rms_norm_eps=1e-8)
+        super(BitLinear, self).__init__(in_features, out_features, bias, rms_norm_eps=1e-8, rms_norm_eps=1e-6, bits=8, flg_before_linear=True)
         self.layernorm = BitRMSNorm(hidden_size=in_features, eps=rms_norm_eps)
+        self.bits = bits
+        self.Qb = 2 ** (self.bits - 1)
+        self.flg_before_linear = flg_before_linear
 
     def absmax_quantize(self, x):
         epsilon = 1e-6
@@ -36,6 +39,15 @@ class BitLinear(nn.Linear):
             x_q = torch.round(x_scaled).clamp(0, self.Qb - 1)
         
         return x_q, gamma
+
+    def custom_sign(self, x):
+        return (x > 0).to(torch.int8) * 2 - 1
+
+    def quantize_weights(self):
+        alpha = self.weight.mean()
+        weight_binarized = self.custom_sign(self.weight - alpha)
+        beta = self.weight.abs().mean()
+        return weight_binarized, beta
         
     def forward(self, x):
         # layernorm (input: x, output: x_norm)
@@ -45,6 +57,7 @@ class BitLinear(nn.Linear):
         x_q, gamma = self.absmax_quantize(x_norm)
 
         # 1 bit weights (input: -, output: w_q, beta)
+        w_q, beta = self.quantize_weights()
 
         # tesnor product (input: x_q,gamma, output: x_matmul)
 
