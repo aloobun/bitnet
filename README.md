@@ -8,4 +8,4 @@
 
 - [x] Tensor product
 
-- [ ] Dequantization 
+- [x] Dequantization 
