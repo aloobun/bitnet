@@ -6,6 +6,6 @@
 
 - [x] 1 bit weights
 
-- [ ] Tensor product
+- [x] Tensor product
 
 - [ ] Dequantization 
