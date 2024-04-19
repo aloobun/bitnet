@@ -63,5 +63,6 @@ class BitLinear(nn.Linear):
         x_matmul = torch.nn.functional.linear(x_q, w_q, self.bias)
 
         # dequantization (input: x_matmul,beta,gamma, output: output)
+        output = x_matmul * (beta * gamma / self.Qb)
 
         return output
