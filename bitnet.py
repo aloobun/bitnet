@@ -20,7 +20,7 @@ class BitRMSNorm(nn.Module):
 
 class BitLinear(nn.Linear):
     def __init__(self, in_features, out_features, bias=False):
-        super(BitLinear, self).__init__(in_features, out_features, bias, rms_norm_eps=1e-8, rms_norm_eps=1e-6, bits=8, flg_before_linear=True)
+        super(BitLinear, self).__init__(in_features, out_features, bias, rms_norm_eps=1e-8, bits=8, flg_before_linear=True)
         self.layernorm = BitRMSNorm(hidden_size=in_features, eps=rms_norm_eps)
         self.bits = bits
         self.Qb = 2 ** (self.bits - 1)
