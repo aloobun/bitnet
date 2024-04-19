@@ -38,6 +38,7 @@ class BitLinear(nn.Linear):
             x_scaled = (x - eta) * self.Qb / gamma
             x_q = torch.round(x_scaled).clamp(0, self.Qb - 1)
         
+        x_q = (x_q - x_scaled).detach() + x_scaled
         return x_q, gamma
 
     def custom_sign(self, x):
